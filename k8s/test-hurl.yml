@@ -10,7 +10,18 @@ spec:
       revision: main
       paths:
         - tests
+  container:
+    workingDir: /data/repo
   steps:
     - name: Run test
       run:
         image: ghcr.io/orange-opensource/hurl:4.2.0
+        env:
+          - name: "HURL_origin"
+            value: "http://hello-app.app.svc.cluster.local"
+        command: ["hurl", "--test", "--glob", "tests/*.hurl"]
+    # - name: Sleep
+    #   condition: always
+    #   run:
+    #     image: ghcr.io/orange-opensource/hurl:4.2.0
+    #     command: ["sleep", "infinity"]
