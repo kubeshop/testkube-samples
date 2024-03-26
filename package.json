@@ -1,0 +1,25 @@
+{
+  "name": "nano",
+  "version": "1.0.0",
+  "description": "Nano server to follow along with 'The road to adopting Kubernetes in development' blog",
+  "repository": "github:WitoDelnat/blog-local-kubernetes-dev",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "vitest run",
+    "test:hurl": "hurl r"
+  },
+  "author": "wito.delnat@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/resource": "1.2.1",
+    "@google-cloud/storage": "5.7.4",
+    "express": "4.17.1",
+    "http-graceful-shutdown": "3.1.13",
+    "pg": "8.11.3",
+    "supertest": "6.3.4"
+  },
+  "devDependencies": {
+    "vitest": "1.4.0"
+  }
+}
