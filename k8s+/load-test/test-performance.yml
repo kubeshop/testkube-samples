@@ -1,0 +1,19 @@
+apiVersion: testworkflows.testkube.io/v1
+kind: TestWorkflow
+metadata:
+  name: hello-app-performance
+  namespace: testkube
+spec:
+  content:
+    configMapRef:
+      name: performance-tests
+  container:
+    image: grafana/k6:latest
+  steps:
+    - name: Run test
+      shell: k6 run k6.js --iterations 100
+    # - name: Sleep
+    #   condition: always
+    #   run:
+    #     image: ghcr.io/orange-opensource/hurl:4.2.0
+    #     command: ["sleep", "infinity"]
