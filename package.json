@@ -5,7 +5,8 @@
   "repository": "github:WitoDelnat/blog-local-kubernetes-dev",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "dev": "nodemon index.mjs",
+    "start": "node index.mjs",
     "test": "vitest run",
     "test:hurl": "hurl r"
   },
@@ -20,6 +21,7 @@
     "supertest": "6.3.4"
   },
   "devDependencies": {
+    "nodemon": "3.1.0",
     "vitest": "1.4.0"
   }
 }
