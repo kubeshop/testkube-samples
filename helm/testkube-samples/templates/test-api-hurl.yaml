@@ -1,4 +1,3 @@
-{{ if .Values.enabled}}
 apiVersion: testworkflows.testkube.io/v1
 kind: TestWorkflow
 metadata:
@@ -7,23 +6,25 @@ metadata:
 spec:
   content:
     git:
-      uri: https://github.com/WitoDelnat/testkube-poc
+      uri: https://github.com/kubeshop/testkube-samples
       revision: main
       paths:
-        - tests
+        - api
   container:
-    workingDir: /data/repo
+    workingDir: /data/repo/api
   steps:
     - name: Run test
       run:
         image: ghcr.io/orange-opensource/hurl:4.2.0
         env:
           - name: "HURL_origin"
-            value: "http://hello-app.app.svc.cluster.local"
-        command: ["hurl", "--test", "--glob", "tests/*.hurl"]
+            value: "http://localhost:8080"
+        shell: |
+          npm run start &
+          sleep 2
+          hurl --test --glob tests/*.hurl
     # - name: Sleep
     #   condition: always
     #   run:
     #     image: ghcr.io/orange-opensource/hurl:4.2.0
     #     command: ["sleep", "infinity"]
-{{end}}

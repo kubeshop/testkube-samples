@@ -1,0 +1,34 @@
+# apiVersion: testworkflows.testkube.io/v1
+# kind: TestWorkflow
+# metadata:
+#   name: hello-api-performance
+#   namespace: testkube
+# spec:
+#   content:
+#     files:
+#       - path: k6.js
+#         content: |
+#           import http from "k6/http";
+
+#           export const options = {
+#             thresholds: {
+#               http_req_failed: ["rate<0.01"],
+#             },
+#           };
+#           export default function () {
+#             http.get(`${__ENV.ORIGIN}/hello`);
+#           }
+#   container:
+#     image: grafana/k6:latest
+#     env:
+#       - name: "ORIGIN"
+#         value: "http://hello-app.app.svc.cluster.local"
+#   steps:
+#     - name: Run test
+#       shell: k6 run k6.js --iterations 100
+
+#     # - name: Sleep
+#     #   condition: always
+#     #   run:
+#     #     image: ghcr.io/orange-opensource/hurl:4.2.0
+#     #     command: ["sleep", "infinity"]
