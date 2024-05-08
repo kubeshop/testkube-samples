@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@radix-ui/colors': 3.0.0
   '@types/react': ^18.2.66
   '@types/react-dom': ^18.2.22
   '@typescript-eslint/eslint-plugin': ^7.2.0
@@ -15,6 +16,7 @@ specifiers:
   vite: ^5.2.0
 
 dependencies:
+  '@radix-ui/colors': 3.0.0
   react: 18.3.1
   react-dom: 18.3.1_react@18.3.1
 
@@ -571,6 +573,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
     dev: true
+
+  /@radix-ui/colors/3.0.0:
+    resolution: {integrity: sha512-FUOsGBkHrYJwCSEtWRCIfQbZG7q1e6DgxCIOe1SUQzDe/7rXXeA47s8yCn6fuTNQAj1Zq4oTFi9Yjp3wzElcxg==}
+    dev: false
 
   /@rollup/rollup-android-arm-eabi/4.17.2:
     resolution: {integrity: sha512-NM0jFxY8bB8QLkoKxIQeObCaDlJKewVlIEkuyYKm5An1tdVZ966w2+MPQ2l8LBZLjR+SgyV+nRkTIunzOYBMLQ==}

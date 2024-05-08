@@ -1,35 +1,149 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import testkubeLogo from "./assets/testkube.svg";
+import reactLogo from "./assets/react.svg";
+import "./App.css";
+
+const API_ORIGIN = "http://localhost:8080";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex flex-col items-center gap-8 w-full">
+      <div className="flex flex-col items-center">
+        <div className="flex gap-5 items-center">
+          <a href="https://testkube.io" target="_blank">
+            <img src={testkubeLogo} className="logo" alt="Vite logo" />
+          </a>
+          <a href="https://react.dev" target="_blank">
+            <img src={reactLogo} className="logo react" alt="React logo" />
+          </a>
+        </div>
+        <h1>Testkube + React</h1>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div className="w-full flex flex-col md:flex-row items-center gap-3">
+        <Counter />
+        <HelloServer />
+        <HelloDatabase />
       </div>
+
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        Run TestWorkflows to test this application.
       </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div className="card">
+      <h2 className="self-start text-lg font-bold">Webapp counts</h2>
+      <button onClick={() => setCount((count) => count + 1)}>
+        count is {count}
+      </button>
+    </div>
+  );
+}
+
+function HelloServer() {
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [response, setResponse] = useState("");
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const url = new URL("hello", API_ORIGIN);
+    if (name) {
+      url.searchParams.append("name", name);
+    }
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setResponse(data.message);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <div className="card">
+      <h2 className="self-start  text-lg font-bold">Server says hello</h2>
+
+      <button onClick={onSubmit}>Greet</button>
+
+      <div className="flex flex-col items-start">
+        <label>Your name:</label>
+        <input value={name} onChange={(e) => setName(e.target.value)} />
+      </div>
+
+      <div className="flex flex-col items-start">
+        <label>Server response:</label>
+        <div>
+          {loading ? (
+            <code>loading…</code>
+          ) : error ? (
+            <code>error!</code>
+          ) : (
+            <code>{response}</code>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HelloDatabase() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [response, setResponse] = useState("");
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    fetch(`${API_ORIGIN}/hello-pg`)
+      .then((response) => response.json())
+      .then((data) => {
+        setResponse(data.message);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <div className="card">
+      <h2 className="self-start  text-lg font-bold">Database says hello</h2>
+
+      <button onClick={onSubmit}>Greet</button>
+
+      <div className="flex flex-col items-start">
+        <label>Server response:</label>
+        <div>
+          {loading ? (
+            <code>loading…</code>
+          ) : error ? (
+            <code>error!</code>
+          ) : (
+            <code>{response}</code>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
