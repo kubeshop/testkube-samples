@@ -41,7 +41,7 @@ function Counter() {
   return (
     <div className="card">
       <h2 className="self-start text-lg font-bold">Webapp counts</h2>
-      <button onClick={() => setCount((count) => count + 1)}>
+      <button data-cy="count" onClick={() => setCount((count) => count + 1)}>
         count is {count}
       </button>
     </div>
@@ -81,7 +81,9 @@ function HelloServer() {
     <div className="card">
       <h2 className="self-start  text-lg font-bold">Server says hello</h2>
 
-      <button onClick={onSubmit}>Greet</button>
+      <button data-cy="greet-api" onClick={onSubmit}>
+        Greet
+      </button>
 
       <div className="flex flex-col items-start">
         <label>Your name:</label>
@@ -130,7 +132,9 @@ function HelloDatabase() {
     <div className="card">
       <h2 className="self-start  text-lg font-bold">Database says hello</h2>
 
-      <button onClick={onSubmit}>Greet</button>
+      <button data-cy="greet-db" onClick={onSubmit}>
+        Greet
+      </button>
 
       <div className="flex flex-col items-start">
         <label>Server response:</label>
