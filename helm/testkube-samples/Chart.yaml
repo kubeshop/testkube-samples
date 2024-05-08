@@ -1,0 +1,5 @@
+apiVersion: v2
+name: testkube-samples
+description: A Helm chart with sample tests for Testkube
+type: application
+version: 0.1.0

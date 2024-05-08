@@ -1,7 +1,8 @@
+{{ if .Values.enabled}}
 apiVersion: testworkflows.testkube.io/v1
 kind: TestWorkflow
 metadata:
-  name: hello-app-performance
+  name: hello-api-performance
   namespace: testkube
 spec:
   content:
@@ -32,3 +33,4 @@ spec:
     #   run:
     #     image: ghcr.io/orange-opensource/hurl:4.2.0
     #     command: ["sleep", "infinity"]
+{{end}}

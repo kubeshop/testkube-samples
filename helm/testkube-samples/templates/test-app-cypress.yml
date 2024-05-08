@@ -1,0 +1,7 @@
+{{ if .Values.enabled}}
+apiVersion: testworkflows.testkube.io/v1
+kind: TestWorkflow
+metadata:
+  name: hello-app
+  namespace: testkube
+{{end}}

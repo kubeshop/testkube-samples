@@ -1,7 +1,8 @@
+{{ if .Values.enabled}}
 apiVersion: testworkflows.testkube.io/v1
 kind: TestWorkflow
 metadata:
-  name: hello-app
+  name: hello-api
   namespace: testkube
 spec:
   steps:
@@ -9,3 +10,4 @@ spec:
       run:
         image: ttl.sh/wito-hello-app:1h
         command: ["npm", "run", "test"]
+{{end}}
