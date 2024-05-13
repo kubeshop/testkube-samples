@@ -1,15 +1,16 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [closed]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
+  # Every merge of a Release Branch to `main` creates a release -> dashboard@0.2.0
   release:
     name: Release
+    if: github.event.pull_request.merged == true && github.base_ref == "main" && startsWith(github.head_ref, "changeset-release")
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -40,3 +41,42 @@ jobs:
         continue-on-error: true
       - run: echo "OK"
         if: job.steps.bad.status == failure()
+
+  # Every merge of a Feature Branch to `main` creates a release candidate -> dashboard@0.1.0-next.1
+  release-candidate:
+    name: Release candidate
+    if: github.event.pull_request.merged == true && github.base_ref == "main" && !startsWith(github.head_ref, "changeset-release")
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ssh-key: "${{ secrets.CHANGESET_GH_DEPLOY_TOKEN }}"
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: "6.x"
+          includePrerelease: true
+
+      - name: Execute GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0
+
+      - name: Define git tag
+        id: tag
+        run: echo "value=dashboard@${{ steps.gitversion.outputs.semVer }}" >> "$GITHUB_OUTPUT"
+
+      - name: Tag repository
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{steps.tag.outputs.value}}',
+              sha: context.sha
+            })
