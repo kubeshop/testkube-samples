@@ -7,5 +7,6 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["!web-releases"]
+  "ignore": ["!testkube-samples-web-x"],
+  "privatePackages": { "version": true, "tag": true }
 }
