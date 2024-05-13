@@ -3,12 +3,11 @@ name: Build
 on:
   push:
     branches:
-      - main
+      - "*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Permissions to use OIDC token authentication
     permissions:
       contents: read
       id-token: write
@@ -26,4 +25,4 @@ jobs:
           project: 60kpnpdhwx
           tags: wito3030/testkube-samples:latest
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: ${{github.ref == 'refs/heads/main'}}
