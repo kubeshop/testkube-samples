@@ -21,7 +21,7 @@ jobs:
       - uses: depot/setup-action@v1
       - uses: depot/build-push-action@v1
         with:
-          context: ./app
+          context: ./apps/web
           project: 60kpnpdhwx
           tags: wito3030/testkube-samples:latest
           platforms: linux/amd64,linux/arm64
