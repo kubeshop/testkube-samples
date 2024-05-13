@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "nano": "1.0.0",
+    "testkube-sample-web": "0.0.0",
+    "dashboard": "0.2.7"
+  },
+  "changesets": []
+}
