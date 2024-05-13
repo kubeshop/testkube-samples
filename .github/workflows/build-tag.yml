@@ -26,10 +26,13 @@ jobs:
         # see https://stackoverflow.com/questions/9532654/expression-after-last-specific-character
         run: echo "value=wito3030/testkube-samples:${GITHUB_REF##*@}" >> "$GITHUB_OUTPUT"
 
+      - name: Print image tag
+        run: echo ${{steps.tag.outputs.value}}
+
       - uses: depot/build-push-action@v1
         with:
           context: ./apps/web
           project: 60kpnpdhwx
           tags: ${{steps.tag.outputs.value}}
           platforms: linux/amd64,linux/arm64
-          push: ${{github.ref == 'refs/heads/main'}}
+          push: true
