@@ -1,5 +1,5 @@
 ---
-"testkube-samples-web-x": patch
+"dashboard": patch
 ---
 
 add patch
