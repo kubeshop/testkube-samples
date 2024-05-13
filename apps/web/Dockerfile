@@ -2,18 +2,16 @@
 # BUILD
 # # # # # # # # # # # # # # # #
 FROM node:20.5-bullseye-slim AS buildContainer
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
 ENV NODE_OPTIONS="--max-old-space-size=8192"
 RUN corepack enable
 
 WORKDIR /service
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm install --ci
 
 COPY . .
 
-RUN pnpm run build
+RUN npm run build
 
 # # # # # # # # # # # # # # # #
 # RUNTIME

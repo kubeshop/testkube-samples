@@ -1,7 +1,10 @@
 {
   "name": "testkube-samples-root",
   "private": true,
-  "dependencies": {
+  "workspaces": [
+    "apps/*"
+  ],
+  "devDependencies": {
     "@changesets/cli": "2.25.2"
   }
 }
