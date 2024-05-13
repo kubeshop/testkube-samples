@@ -1,0 +1,59 @@
+name: Build Branch
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: depot/setup-action@v1
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: "6.x"
+          includePrerelease: true
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0
+
+      - name: Display GitVersion outputs (step output)
+        run: |
+          echo "Major: ${{ steps.gitversion.outputs.major }}"
+          echo "Minor: ${{ steps.gitversion.outputs.minor }}"
+          echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+          echo "Sha: ${{ steps.gitversion.outputs.sha }}"
+          echo "ShortSha: ${{ steps.gitversion.outputs.shortSha }}"
+          echo "preReleaseTag: ${{ steps.gitversion.outputs.preReleaseTag }}"
+          echo "preReleaseTagWithDash: ${{ steps.gitversion.outputs.preReleaseTagWithDash }}"
+          echo "preReleaseLabel: ${{ steps.gitversion.outputs.preReleaseLabel }}"
+          echo "preReleaseNumber: ${{ steps.gitversion.outputs.preReleaseNumber }}"
+
+      - name: Print image tag
+        run: echo wito3030/testkube-samples:${{steps.version.outputs.value}}-${{github.sha}}
+
+      # - uses: depot/build-push-action@v1
+      #   with:
+      #     context: ./apps/web
+      #     project: 60kpnpdhwx
+      #     platforms: linux/amd64,linux/arm64
+      #     push: false
+      #     # Argo's expected SemVer for pre-releases i.e. v1.0.0-<githash>
+      #     # See https://argocd-image-updater.readthedocs.io/en/v0.5.0/configuration/images/#always-deploy-the-latest-build
+      #     tags: wito3030/testkube-samples:${{steps.version.outputs.value}}-${{github.sha}}
