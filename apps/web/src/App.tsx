@@ -3,7 +3,7 @@ import testkubeLogo from "./assets/testkube.svg";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 
-const API_ORIGIN = "http://localhost:8080";
+const API_ORIGIN = "hello-app";
 
 function App() {
   return (
