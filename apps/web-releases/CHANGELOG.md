@@ -1,5 +1,11 @@
 # dashboard
 
+## 0.2.6
+
+### Patch Changes
+
+- 6b5ad34: fix 10
+
 ## 0.2.5
 
 ### Patch Changes
