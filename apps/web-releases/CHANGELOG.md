@@ -1,5 +1,15 @@
 # dashboard
 
+## 0.2.8
+
+### Patch Changes
+
+- cc94c9a: set api origin for Kubernetes
+- ddeefef: fix 12
+- 4557422: fix 14
+- a9a4f36: fix 13
+- 12c04f0: fix 15
+
 ## 0.2.7
 
 ### Patch Changes
