@@ -1,4 +1,10 @@
-branches: {}
+branches:
+  main:
+    regex: ^main$
+    tag: next
+    increment: None
+    mode: ContinuousDelivery
+    is-mainline: true
 ignore:
   sha: []
 merge-message-formats: {}
