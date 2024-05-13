@@ -1,8 +1,8 @@
 name: Release
 
 on:
-  pull_request:
-    types: [closed]
+  push:
+    branches: [main]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -10,7 +10,7 @@ jobs:
   # Every merge of a Release Branch to `main` creates a release -> dashboard@0.2.0
   release:
     name: Release
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && startsWith(github.head_ref, 'changeset-release')
+    if: ${{github.event.push.head_commit.message == 'chore: release'}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -45,7 +45,7 @@ jobs:
   # Every merge of a Feature Branch to `main` creates a release candidate -> dashboard@0.1.0-next.1
   release-candidate:
     name: Release candidate
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && !startsWith(github.head_ref, 'changeset-release')
+    if: ${{github.event.push.head_commit.message != 'chore: release'}}
     runs-on: ubuntu-latest
     permissions:
       contents: read
