@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-app
+  name: samples-web
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hello-app
+      app: samples-web
   template:
     metadata:
       labels:
-        app: hello-app
+        app: samples-web
     spec:
       containers:
-        - name: hello-app
-          image: wito3030/testkube-samples-api
+        - name: samples-web
+          image: wito3030/testkube-samples
           imagePullPolicy: Always
           ports:
             - name: http-web
