@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: samples-web
-          image: wito3030/testkube-samples:0.2.7-c5b7f6c7f98b3590b4d0c29af1e76f2eac113084
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global) }}
           imagePullPolicy: Always
           ports:
             - name: http-web
