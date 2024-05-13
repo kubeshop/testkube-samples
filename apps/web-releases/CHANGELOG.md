@@ -1,5 +1,11 @@
 # dashboard
 
+## 0.2.4
+
+### Patch Changes
+
+- c7ebbec: fix 8
+
 ## 0.2.3
 
 ### Patch Changes
