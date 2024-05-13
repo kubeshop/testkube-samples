@@ -54,20 +54,24 @@ jobs:
         with:
           ssh-key: "${{ secrets.CHANGESET_GH_DEPLOY_TOKEN }}"
           fetch-depth: 0
-
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0
+      - uses: actions/setup-node@v3
         with:
-          versionSpec: "6.x"
-          includePrerelease: true
+          node-version: "20.x"
 
-      - name: Execute GitVersion
-        id: gitversion
-        uses: gittools/actions/gitversion/execute@v0
+      - name: Determine previous git tag
+        id: previous
+        run: echo "result=${{ git describe --tags --abbrev=0 }}" >> "$GITHUB_OUTPUT"
 
-      - name: Define git tag
-        id: tag
-        run: echo "value=dashboard@${{ steps.gitversion.outputs.semVer }}" >> "$GITHUB_OUTPUT"
+      - run: npm install semver
+      - name: Define next git tag
+        uses: actions/github-script@v7
+        id: next
+        with:
+          script: return require('semver').inc('${{steps.previous.outputs.result}}', 'prerelease', 'next')
+          result-encoding: string
+
+      - name: Print next git tag
+        run: echo ${{steps.next.outputs.result}}
 
       - name: Tag repository
         uses: actions/github-script@v5
@@ -76,6 +80,6 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/${{steps.tag.outputs.value}}',
+              ref: 'refs/tags/${{steps.next.outputs.result}}',
               sha: context.sha
             })
