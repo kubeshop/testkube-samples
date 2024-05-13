@@ -82,5 +82,5 @@ jobs:
 
       - name: Tag repository
         run: |
-          git tag dashboard@${{steps.next.outsputs.result}}
+          git tag dashboard@${{steps.next.outputs.result}}
           git push --tags
