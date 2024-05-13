@@ -74,7 +74,7 @@ jobs:
         uses: actions/github-script@v7
         id: next
         with:
-          script: return require('semver').inc('${{steps.previous.outputs.tag}}'.replace("dashboard@", ""), 'prerelease', 'next').p
+          script: return require('semver').inc('${{steps.previous.outputs.tag}}'.replace("dashboard@", ""), 'prerelease', 'rc')
           result-encoding: string
 
       - name: Print next git tag
