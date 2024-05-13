@@ -21,4 +21,3 @@ jobs:
         with:
           context: ./app
           project: 60kpnpdhwx
-          context: .
