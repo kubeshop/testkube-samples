@@ -13,6 +13,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: demo
+                name: samples-web
                 port:
                   number: 3001
