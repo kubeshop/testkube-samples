@@ -45,6 +45,7 @@ jobs:
 
   debug:
     name: Debug Release
+    runs-on: ubuntu-latest
     steps:
       - run: echo ${{github.event.push.head_commit.message}}
       - run: >-
