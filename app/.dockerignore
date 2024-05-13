@@ -1,0 +1,4 @@
+cypress/**
+dist/**
+node_modules/**
+**/__generated__/**
