@@ -21,4 +21,5 @@ jobs:
         with:
           context: ./app
           project: 60kpnpdhwx
+          tag: latest
           push: true
