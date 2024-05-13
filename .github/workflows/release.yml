@@ -43,54 +43,61 @@ jobs:
       - run: echo "OK"
         if: job.steps.bad.status == failure()
 
-  # Every merge of a Feature Branch to `main` creates a release candidate -> dashboard@0.1.0-next.1
-  release-candidate:
-    name: Release candidate
-    if: >-
-      ${{github.event.push.head_commit.message != 'chore: release'}}
-    runs-on: ubuntu-latest
+  debug:
+    name: Debug Release
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ssh-key: "${{ secrets.CHANGESET_GH_DEPLOY_TOKEN }}"
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "20.x"
+      - run: echo ${{github.event.push.head_commit.message}}
+      - run: >-
+          echo ${{github.event.push.head_commit.message == 'chore: release'}}
 
-      # - name: Determine previous git tag
-      #   id: previous
-      #   run: echo "result=${{ git describe --tags --abbrev=0 }}" >> "$GITHUB_OUTPUT"
+  # # Every merge of a Feature Branch to `main` creates a release candidate -> dashboard@0.1.0-next.1
+  # release-candidate:
+  #   name: Release candidate
+  #   if: >-
+  #     ${{github.event.push.head_commit.message != 'chore: release'}}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         ssh-key: "${{ secrets.CHANGESET_GH_DEPLOY_TOKEN }}"
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "20.x"
 
-      - name: Determine previous git tag
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-        id: previous
-        with:
-          fallback: 0.1.0
-          prefix: dashboard@
+  #     # - name: Determine previous git tag
+  #     #   id: previous
+  #     #   run: echo "result=${{ git describe --tags --abbrev=0 }}" >> "$GITHUB_OUTPUT"
 
-      - name: Print previous git tag
-        run: echo ${{steps.previous.outputs.tag}}
+  #     - name: Determine previous git tag
+  #       uses: WyriHaximus/github-action-get-previous-tag@v1
+  #       id: previous
+  #       with:
+  #         fallback: 0.1.0
+  #         prefix: dashboard@
 
-      - run: npm install semver
-      - name: Define next git tag
-        uses: actions/github-script@v7
-        id: next
-        with:
-          script: |
-            return require('semver').inc('${{steps.previous.outputs.tag}}'.replace("dashboard@", ""), 'prerelease', 'rc')
-          result-encoding: string
+  #     - name: Print previous git tag
+  #       run: echo ${{steps.previous.outputs.tag}}
 
-      - name: Print next git tag
-        run: echo ${{steps.next.outputs.result}}
+  #     - run: npm install semver
+  #     - name: Define next git tag
+  #       uses: actions/github-script@v7
+  #       id: next
+  #       with:
+  #         script: |
+  #           return require('semver').inc('${{steps.previous.outputs.tag}}'.replace("dashboard@", ""), 'prerelease', 'rc')
+  #         result-encoding: string
 
-      - name: Tag repository
-        uses: actions/github-script@v5
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/dashboard@${{steps.next.outputs.result}}',
-              sha: context.sha
-            })
+  #     - name: Print next git tag
+  #       run: echo ${{steps.next.outputs.result}}
+
+  #     - name: Tag repository
+  #       uses: actions/github-script@v5
+  #       with:
+  #         script: |
+  #           github.rest.git.createRef({
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             ref: 'refs/tags/dashboard@${{steps.next.outputs.result}}',
+  #             sha: context.sha
+  #           })
