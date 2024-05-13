@@ -25,4 +25,5 @@ jobs:
           context: ./app
           project: 60kpnpdhwx
           tags: wito3030/testkube-samples:latest
+          platforms: linux/amd64,linux/arm64
           push: true
