@@ -17,7 +17,7 @@ function App() {
             <img src={reactLogo} className="logo react" alt="React logo" />
           </a>
         </div>
-        <h1>Testkube + React v13</h1>
+        <h1>Testkube + React v14</h1>
       </div>
 
       <div className="w-full flex flex-col md:flex-row items-center gap-3">
