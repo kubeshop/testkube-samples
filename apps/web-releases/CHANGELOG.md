@@ -1,5 +1,11 @@
 # dashboard
 
+## 0.2.3
+
+### Patch Changes
+
+- 4120994: fix 7
+
 ## 0.2.2
 
 ### Patch Changes
