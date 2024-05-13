@@ -10,7 +10,7 @@ jobs:
   # Every merge of a Release Branch to `main` creates a release -> dashboard@0.2.0
   release:
     name: Release
-    if: |
+    if: >-
       ${{github.event.push.head_commit.message == 'chore: release'}}
     runs-on: ubuntu-latest
     steps:
@@ -46,12 +46,9 @@ jobs:
   # Every merge of a Feature Branch to `main` creates a release candidate -> dashboard@0.1.0-next.1
   release-candidate:
     name: Release candidate
-    if: |
+    if: >-
       ${{github.event.push.head_commit.message != 'chore: release'}}
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v3
         with:
