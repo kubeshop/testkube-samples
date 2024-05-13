@@ -1,5 +1,11 @@
 # dashboard
 
+## 0.2.1
+
+### Patch Changes
+
+- 1b27d16: fix feature 5
+
 ## 0.2.0
 
 ### Minor Changes
