@@ -11,7 +11,7 @@ jobs:
   release:
     name: Release
     if: >-
-      ${{github.event.head_commit.message == 'chore: release'}}
+      ${{github.event.head_commit.message == 'chore: release' || contains(github.event.head_commit.message, 'changeset-release')}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -47,7 +47,7 @@ jobs:
   release-candidate:
     name: Release candidate
     if: >-
-      ${{github.event.head_commit.message != 'chore: release'}}
+      ${{github.event.head_commit.message != 'chore: release' && !contains(github.event.head_commit.message, 'changeset-release')}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
