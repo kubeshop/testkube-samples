@@ -1,0 +1,7 @@
+{
+  "name": "testkube-samples-root",
+  "private": true,
+  "dependencies": {
+    "@changesets/cli": "2.25.2"
+  }
+}
