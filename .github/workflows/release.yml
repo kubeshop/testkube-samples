@@ -11,7 +11,7 @@ jobs:
   release:
     name: Release
     if: >-
-      ${{github.event.push.head_commit.message == 'chore: release'}}
+      ${{github.event.head_commit.message == 'chore: release'}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -47,9 +47,9 @@ jobs:
     name: Debug Release
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{github.event.push.head_commit.message}}
+      - run: echo ${{github.event.head_commit.message}}
       - run: >-
-          echo ${{github.event.push.head_commit.message == 'chore: release'}}
+          echo ${{github.event.head_commit.message == 'chore: release'}}
 
   # # Every merge of a Feature Branch to `main` creates a release candidate -> dashboard@0.1.0-next.1
   # release-candidate:
