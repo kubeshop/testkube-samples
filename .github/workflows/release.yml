@@ -83,6 +83,7 @@ jobs:
       - name: Tag repository
         uses: actions/github-script@v5
         with:
+          github-token: ${{ secrets.CHANGESET_GH_DEPLOY_TOKEN }}
           script: |
             github.rest.git.createRef({
               owner: context.repo.owner,
