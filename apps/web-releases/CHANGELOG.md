@@ -1,5 +1,11 @@
 # dashboard
 
+## 0.2.2
+
+### Patch Changes
+
+- c2509b9: Fix build tag
+
 ## 0.2.1
 
 ### Patch Changes
