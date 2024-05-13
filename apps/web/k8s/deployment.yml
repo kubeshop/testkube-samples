@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: samples-web
-          image: wito3030/testkube-samples
+          image: wito3030/testkube-samples:0.2.7-cc94c9a55a167186b90f1da365ea17142d617eeb
           imagePullPolicy: Always
           ports:
             - name: http-web
-              containerPort: 8080
+              containerPort: 3001
