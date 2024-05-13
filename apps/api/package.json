@@ -1,5 +1,6 @@
 {
   "name": "nano",
+  "private": true,
   "version": "1.0.0",
   "description": "Nano server to follow along with 'The road to adopting Kubernetes in development' blog",
   "repository": "github:WitoDelnat/blog-local-kubernetes-dev",
