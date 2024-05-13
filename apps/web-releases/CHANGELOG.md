@@ -1,5 +1,11 @@
 # dashboard
 
+## 0.2.7
+
+### Patch Changes
+
+- f86f1be: fix 11
+
 ## 0.2.6
 
 ### Patch Changes
