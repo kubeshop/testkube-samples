@@ -31,3 +31,8 @@ jobs:
           title: "chore: release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        # changeset tag incorrectly creates tags for each package. Ignore for now
+        continue-on-error: true
+      - run: echo "OK"
+        if: job.steps.bad.status == failure()
