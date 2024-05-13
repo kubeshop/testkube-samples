@@ -14,6 +14,10 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+        with:
+          # workaround because by default by a workflow pushing a tag cannot trigger another workflow.
+          # see https://github.com/orgs/community/discussions/27028#discussioncomment-3254367
+          ssh-key: "${{ secrets.CHANGESET_GH_DEPLOY_TOKEN }}"
 
       - name: Install Node.js
         uses: actions/setup-node@v4
