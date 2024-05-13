@@ -1,6 +1,6 @@
 branches:
   main:
-    regex: ^main$
+    regex: .*
     tag: next
     increment: None
     mode: ContinuousDelivery
