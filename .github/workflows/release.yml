@@ -81,13 +81,6 @@ jobs:
         run: echo ${{steps.next.outputs.result}}
 
       - name: Tag repository
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.CHANGESET_GH_DEPLOY_TOKEN }}
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/dashboard@${{steps.next.outputs.result}}',
-              sha: context.sha
-            })
+        run: |
+          git tag dashboard@${{steps.next.outsputs.result}}
+          git push --tags
