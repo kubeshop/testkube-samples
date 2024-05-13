@@ -26,6 +26,9 @@ jobs:
         with:
           cmd: "jq .version apps/web-releases/package.json -r"
 
+      - name: Debug image tag
+        run: echo wito3030/testkube-samples:${steps.version.outputs.value}-${GITHUB_SHA}
+
       - uses: depot/build-push-action@v1
         with:
           context: ./apps/web
