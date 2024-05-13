@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: depot/setup-action@v1
+
+      - name: Extract current version
+        uses: sergeysova/jq-action@v2
+        id: version
+        with:
+          cmd: "jq .version apps/web-releases/package.json -r"
+
+      - uses: depot/build-push-action@v1
+        with:
+          context: ./apps/web
+          project: 60kpnpdhwx
+          platforms: linux/amd64,linux/arm64
+          push: ${{github.ref == 'refs/heads/main'}}
+          # Argo's expected SemVer for pre-releases i.e. v1.0.0-<githash>
+          # See https://argocd-image-updater.readthedocs.io/en/v0.5.0/configuration/images/#always-deploy-the-latest-build
+          tags: wito3030/testkube-samples:${steps.version.outputs.value}-${GITHUB_SHA}

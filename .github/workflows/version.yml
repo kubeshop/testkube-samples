@@ -1,0 +1,42 @@
+name: Version
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        type: string
+        default: .
+    outputs:
+      sha:
+        description: Short SHA of the current commit
+        value: ${{ jobs.extract.outputs.sha_short }}
+      version:
+        description: Version set in package.json
+        value: ${{ jobs.extract.outputs.version }}
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.path }}
+
+    outputs:
+      sha_short: ${{ steps.parse_ref.outputs.sha_short }}
+      version: ${{ steps.parse_version.outputs.value }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract short GIT commit SHA
+        id: parse_ref
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Extract version from package.json
+        uses: sergeysova/jq-action@v2
+        id: parse_version
+        with:
+          cmd: "jq .version apps/web-releases/package.json -r"

@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches:
+    tags:
       - "*"
 
 jobs:
@@ -19,10 +19,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: depot/setup-action@v1
+
       - uses: depot/build-push-action@v1
         with:
           context: ./apps/web
           project: 60kpnpdhwx
-          tags: wito3030/testkube-samples:latest
+          # ref is "ref/tags/dashboard@0.1.0" so we want to take everything after @
+          # see https://stackoverflow.com/questions/9532654/expression-after-last-specific-character
+          tags: wito3030/testkube-samples:${GITHUB_REF##*@}
           platforms: linux/amd64,linux/arm64
           push: ${{github.ref == 'refs/heads/main'}}
