@@ -20,12 +20,16 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: depot/setup-action@v1
 
+      - name: Create tag
+        id: tag
+        # ref is "ref/tags/dashboard@0.1.0" so we want to take everything after @
+        # see https://stackoverflow.com/questions/9532654/expression-after-last-specific-character
+        run: echo "value=wito3030/testkube-samples:${GITHUB_REF##*@}" >> "$GITHUB_OUTPUT"
+
       - uses: depot/build-push-action@v1
         with:
           context: ./apps/web
           project: 60kpnpdhwx
-          # ref is "ref/tags/dashboard@0.1.0" so we want to take everything after @
-          # see https://stackoverflow.com/questions/9532654/expression-after-last-specific-character
-          tags: wito3030/testkube-samples:${GITHUB_REF##*@}
+          tags: ${{steps.tag.outputs.value}}
           platforms: linux/amd64,linux/arm64
           push: ${{github.ref == 'refs/heads/main'}}
