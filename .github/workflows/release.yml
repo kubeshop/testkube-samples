@@ -69,12 +69,16 @@ jobs:
           fallback: 0.1.0
           prefix: dashboard@
 
+      - name: Print previous git tag
+        run: echo ${{steps.previous.outputs.tag}}
+
       - run: npm install semver
       - name: Define next git tag
         uses: actions/github-script@v7
         id: next
         with:
-          script: return require('semver').inc('${{steps.previous.outputs.tag}}'.replace("dashboard@", ""), 'prerelease', 'rc')
+          script: |
+            return require('semver').inc('${{steps.previous.outputs.tag}}'.replace("dashboard@", ""), 'prerelease', 'rc')
           result-encoding: string
 
       - name: Print next git tag
