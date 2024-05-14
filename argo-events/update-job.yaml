@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: argocd-image-updater-job-5
+  namespace: argocd
+spec:
+  restartPolicy: never
+  serviceAccountName: argocd-image-updater
+  containers:
+    - name: argocd-image-updater
+      image: quay.io/argoprojlabs/argocd-image-updater:v0.12.2
+      command:
+        - /usr/local/bin/argocd-image-updater
+        - run
+        - --once
+        - --warmup-cache=false
+      env:
+        - name: ARGOCD_TOKEN
+          value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJqZWZmOmFwaUtleSIsIm5iZiI6MTcxNTYzMzUwOCwiaWF0IjoxNzE1NjMzNTA4LCJqdGkiOiI0YTMxZjhjZC01NTE1LTQwZTAtYjQ3OS00YTEzZmViZDgzYmUifQ._gWsS-l-c0HMH32Gr798BNsgHvTUQJkDsXF3bM4gfPw"
+        - name: ARGOCD_INSECURE
+          value: "true"

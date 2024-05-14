@@ -2,10 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
   name: webhook
-  namespace: argo-events
 spec:
   template:
-    serviceAccountName: operate-workflow-sa
+    serviceAccountName: create-pod-sa # A service account has privileges to create a Pod
   dependencies:
     - name: test-dep
       eventSourceName: webhook
@@ -20,47 +19,26 @@ spec:
               apiVersion: v1
               kind: Pod
               metadata:
-                generateName: hello-world-
+                generateName: argocd-imager-updater-
               spec:
+                restartPolicy: Never
+                serviceAccountName: argocd-image-updater
                 containers:
-                  - name: hello-container
-                    args:
-                      - "hello-world"
+                  - name: argocd-image-updater
+                    image: quay.io/argoprojlabs/argocd-image-updater:v0.12.2
                     command:
-                      - cowsay
-                    image: "docker/whalesay:latest"
+                      - /usr/local/bin/argocd-image-updater
+                      - run
+                      - --once
+                      - --warmup-cache=false
+                    env:
+                      - name: ARGOCD_TOKEN
+                        value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJqZWZmOmFwaUtleSIsIm5iZiI6MTcxNTYzMzUwOCwiaWF0IjoxNzE1NjMzNTA4LCJqdGkiOiI0YTMxZjhjZC01NTE1LTQwZTAtYjQ3OS00YTEzZmViZDgzYmUifQ._gWsS-l-c0HMH32Gr798BNsgHvTUQJkDsXF3bM4gfPw"
+                      - name: ARGOCD_INSECURE
+                        value: "true"
+                      - name: IMAGE_UPDATER_LOGLEVEL
+                        value: "debug"
           parameters:
             - src:
                 dependencyName: test-dep
-                dataKey: body
               dest: spec.containers.0.args.0
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: operate-workflow-sa
-  namespace: argo-events
----
-# Similarly you can use a ClusterRole and ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: operate-workflow-role
-  namespace: argo-events
-rules:
-  - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["*"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: operate-workflow-role-binding
-  namespace: argo-events
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: operate-workflow-role
-subjects:
-  - kind: ServiceAccount
-    name: operate-workflow-sa
