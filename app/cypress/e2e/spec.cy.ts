@@ -1,4 +1,4 @@
-const APP_ORIGIN = "http://localhost:5173";
+const APP_ORIGIN = "/";
 
 describe("template spec", () => {
   beforeEach(() => {
