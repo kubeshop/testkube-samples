@@ -1,0 +1,40 @@
+services:
+  app:
+    build: ./app
+    depends_on:
+      - api
+    ports:
+      - 5005:5005
+    networks:
+      - network-backend
+      - network-public
+
+  api:
+    build: ./api
+    depends_on:
+      - database
+    ports:
+      - 8080:8080
+    networks:
+      - network-backend
+      - network-public
+
+  database:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=api-password
+      - POSTGRES_USER=api-user
+      - POSTGRES_DB=api-db
+    networks:
+      - network-backend
+
+networks:
+  network-backend:
+  network-public:
+
+volumes:
+  db_data:
