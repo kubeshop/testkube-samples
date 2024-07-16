@@ -4,6 +4,8 @@
     "build": {
       "outputs": ["dist/**"]
     },
+    "test": {},
+    "test:e2e": {},
     "check-types": {
       "dependsOn": ["^check-types"]
     },

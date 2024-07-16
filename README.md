@@ -32,3 +32,17 @@ docker run --name testkube-sample-db \
   -e POSTGRES_PASSWORD=api-password \
   --rm -d postgres
 ```
+
+## Running tests
+
+Unit tests can be executed without a running appliction:
+
+```
+npm run test
+```
+
+For E2E test, you should first run the application as described above:
+
+```
+npm run test:e2e
+```

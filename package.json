@@ -11,7 +11,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "turbo run dev"
+    "start": "turbo run dev",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e"
   },
   "keywords": [],
   "author": "",

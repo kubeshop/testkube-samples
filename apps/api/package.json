@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "nodemon index.mjs",
     "start": "node index.mjs",
-    "test": "vitest run",
+    "test": "npm run test:vite",
+    "test:vite": "vitest run",
+    "test:e2e": "npm run test:hurl",
     "test:hurl": "hurl --test --glob tests/*.hurl --variable origin=http://localhost:8080"
   },
   "author": "wito.delnat@gmail.com",
