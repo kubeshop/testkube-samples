@@ -4,6 +4,8 @@ import pg from "pg";
 import GracefulShutdown from "http-graceful-shutdown";
 import cors from "cors";
 
+const PORT = 8080;
+
 export const app = express();
 app.use(cors());
 
@@ -39,6 +41,6 @@ app.get("/hello-pg", async (_, response) => {
 
 GracefulShutdown(app);
 
-http.createServer(app).listen(8080, "0.0.0.0", () => {
-  console.log(`🚀 server running`);
+http.createServer(app).listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 server running on localhost:8080`);
 });
