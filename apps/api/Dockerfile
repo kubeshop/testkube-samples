@@ -1,11 +1,15 @@
 FROM node:lts
 
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install
 
-COPY index.mjs .
-COPY app.test.mjs .
+COPY package.json ./
+COPY package-lock.json ./ 
+COPY apps/api/package.json ./apps/api/package.json
 
-EXPOSE 8080
-CMD ["node", "index.mjs"]
+RUN npm ci
+
+COPY . .
+
+WORKDIR /app/apps/api
+
+CMD ["npm", "run", "start"]

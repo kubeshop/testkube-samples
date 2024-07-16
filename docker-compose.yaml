@@ -1,0 +1,34 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "4173:4173"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: api-db
+      POSTGRES_USER: api-user
+      POSTGRES_PASSWORD: api-password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U api-user -d api-db"]
+      interval: 2s
+      retries: 10
+      start_period: 1s
+      timeout: 10s
