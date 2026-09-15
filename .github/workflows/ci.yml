@@ -1,0 +1,143 @@
+name: Continuous Integration and Delivery
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository }}
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  quality:
+    name: Install, lint, test, and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint --workspace apps/web
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build --workspace apps/web
+
+  publish:
+    name: Build and publish Docker images
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: quality
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_PREFIX }}/backend:${{ env.IMAGE_TAG }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_PREFIX }}/frontend:${{ env.IMAGE_TAG }}
+
+  deploy:
+    name: Deploy to development with Helm
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: publish
+    runs-on: ubuntu-latest
+    environment: development
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull published images
+        run: |
+          docker pull $IMAGE_PREFIX/backend:$IMAGE_TAG
+          docker pull $IMAGE_PREFIX/frontend:$IMAGE_TAG
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.10.0
+        with:
+          cluster_name: testkube-samples
+
+      - name: Load images into kind
+        run: |
+          kind load docker-image $IMAGE_PREFIX/backend:$IMAGE_TAG --name testkube-samples
+          kind load docker-image $IMAGE_PREFIX/frontend:$IMAGE_TAG --name testkube-samples
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Install application with Helm
+        run: |
+          helm upgrade --install sample-app helm/app \
+            --values helm/app/values-dev.yaml \
+            --set backend.image.repository=$IMAGE_PREFIX/backend \
+            --set backend.image.tag=$IMAGE_TAG \
+            --set backend.image.pullPolicy=IfNotPresent \
+            --set frontend.image.repository=$IMAGE_PREFIX/frontend \
+            --set frontend.image.tag=$IMAGE_TAG \
+            --set frontend.image.pullPolicy=IfNotPresent
+
+      - name: Wait for application
+        run: |
+          kubectl wait --for=condition=available --timeout=180s \
+            deployment/sample-app-postgres \
+            deployment/sample-app-backend \
+            deployment/sample-app-frontend
+
+      - name: Smoke test application
+        run: |
+          kubectl port-forward service/sample-app-backend 8080:8080 > /tmp/backend-port-forward.log 2>&1 &
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8080/hello; then
+              break
+            fi
+            sleep 2
+          done
+          database_response=$(curl --fail --silent http://127.0.0.1:8080/hello-pg || true)
+          echo "$database_response"
+          echo "$database_response" | grep --fixed-strings "hello world from postgres"

@@ -1,0 +1,39 @@
+frontend:
+  replicaCount: 1
+  image:
+    repository: testkube-samples-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 4173
+  resources: {}
+
+backend:
+  replicaCount: 1
+  image:
+    repository: testkube-samples-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+  resources: {}
+
+postgres:
+  replicaCount: 1
+  image:
+    repository: postgres
+    tag: "16"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  database: api-db
+  username: api-user
+  password: api-password
+  persistence:
+    enabled: true
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce
+  resources: {}
